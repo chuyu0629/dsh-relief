@@ -1,0 +1,12 @@
+# 运行产物
+dsh-repair.log
+dsh-repair-stats.jsonl
+dsh-repair-ledger.jsonl
+dsh-safe-start.log
+dsh-backups/
+dsh-golden/
+_diag/
+dist/
+node_modules/
+*.bak
+*.bak-*

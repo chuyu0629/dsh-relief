@@ -1,0 +1,309 @@
+{
+  "version": "1.0",
+  "updated": "2026-11-14",
+  "entries": [
+    {
+      "id": "auth431",
+      "title": "Cookie 累积导致 431 认证失败",
+      "cause": "%APPDATA%\\@deepseek-ai\\dsh-desktop\\Network\\Cookies 里 dsh-auth-* cookie 无淘汰，Header 超过 Node maxHeaderSize=16384",
+      "evidence": "desktop welcome: Web authentication failed + Handshake failed with status code 431",
+      "actions": [
+        "Reset-CookieStore（只搬走 Cookies 文件）",
+        "重启验证"
+      ],
+      "useless": [
+        "重装 DSH",
+        "删整个 dsh-desktop 目录",
+        "禁插件"
+      ],
+      "ref": "blog.margrop.net deepseek-harness crash-loop"
+    },
+    {
+      "id": "cookiesBloat",
+      "title": "Cookie 库体积异常（>200KB）",
+      "cause": "同上，尚未到 431 阈值",
+      "evidence": "diagnose metrics.cookieBytes 偏大",
+      "actions": [
+        "Reset-CookieStore"
+      ],
+      "useless": [
+        "清渲染缓存"
+      ]
+    },
+    {
+      "id": "gpuCrash",
+      "title": "GPU 进程反复崩",
+      "cause": "显卡驱动/双显卡/远程会话",
+      "evidence": "GPU process isn't usable. Goodbye.",
+      "actions": [
+        "以 --disable-gpu 启动",
+        "更新驱动"
+      ],
+      "useless": [
+        "清缓存",
+        "重装插件"
+      ]
+    },
+    {
+      "id": "cacheDenied",
+      "title": "缓存目录被占用或权限拒绝",
+      "cause": "cache_util_win.cc Unable to move the cache: Access is denied",
+      "evidence": "ERROR:cache_util_win.cc",
+      "actions": [
+        "改名/清 GPUCache 等渲染缓存",
+        "确认没有第二个实例占着 userdata"
+      ],
+      "useless": [
+        "重装 DSH"
+      ]
+    },
+    {
+      "id": "v8Snapshot",
+      "title": "V8 快照/本体不兼容",
+      "cause": "本体与 Windows build 不匹配（如 26200）",
+      "evidence": "STATUS_BREAKPOINT / exit -2147483645 / IsLoadBrowserProcessSpecificV8SnapshotEnabled",
+      "actions": [
+        "报告：需重装或回退本体版本"
+      ],
+      "useless": [
+        "禁插件",
+        "清缓存",
+        "改配置"
+      ]
+    },
+    {
+      "id": "breakpoint",
+      "title": "进程秒退 STATUS_BREAKPOINT",
+      "cause": "同上或原生模块 ABI 不符",
+      "evidence": "exception code 0x80000003",
+      "actions": [
+        "fatal 判定，直接建议重装本体"
+      ],
+      "useless": [
+        "修复阶梯"
+      ]
+    },
+    {
+      "id": "serviceConflict",
+      "title": "插件 provide 服务名冲突",
+      "cause": "两个插件注册同名服务",
+      "evidence": "service \"X\" has been registered / Failed to load plugins",
+      "actions": [
+        "按日志点名禁用后者",
+        "启动前做同名服务预检"
+      ],
+      "useless": [
+        "清缓存"
+      ]
+    },
+    {
+      "id": "gnuWhoami",
+      "title": "PATH 上 Git 的 whoami 抢先",
+      "cause": "whoami: extra operand '/user'",
+      "evidence": "无限重试，CPU 100%",
+      "actions": [
+        "改 PATH 顺序或插件改用绝对路径"
+      ],
+      "useless": [
+        "重启"
+      ]
+    },
+    {
+      "id": "portReserved",
+      "title": "端口落在 Hyper-V/WSL 保留段",
+      "cause": "netsh int ipv4 show excludedportrange 命中",
+      "evidence": "EACCES 但端口没人监听",
+      "actions": [
+        "换端口或 netsh 调整保留段"
+      ],
+      "useless": [
+        "杀进程"
+      ]
+    },
+    {
+      "id": "corruptSession",
+      "title": "会话日志损坏",
+      "cause": "seq gap / 单条记录损坏",
+      "evidence": "INVALID_REPLAY_STATE / session.list failed",
+      "actions": [
+        "把损坏的会话目录移出 sessions"
+      ],
+      "useless": [
+        "重启"
+      ]
+    },
+    {
+      "id": "diskFull",
+      "title": "系统盘空间不足",
+      "cause": "剩余 <1GB",
+      "evidence": "diagnose metrics.freeGB",
+      "actions": [
+        "清理临时/缓存/更新包"
+      ],
+      "useless": [
+        "重装插件"
+      ]
+    },
+    {
+      "id": "clockSkew",
+      "title": "系统时间偏移",
+      "cause": "时间与服务器差 >5 分钟",
+      "evidence": "401/签名校验失败",
+      "actions": [
+        "同步时间 w32tm /resync"
+      ],
+      "useless": [
+        "改配置"
+      ]
+    },
+    {
+      "id": "rendererOom",
+      "title": "渲染进程内存耗尽",
+      "cause": "超长会话/大附件",
+      "evidence": "Renderer process gone / code 5",
+      "actions": [
+        "转世新会话",
+        "减少附件"
+      ],
+      "useless": [
+        "禁插件"
+      ]
+    },
+    {
+      "id": "singleInstance",
+      "title": "已有实例占用 userdata",
+      "cause": "上一进程没退干净",
+      "evidence": "Failed to create a ProcessSingleton",
+      "actions": [
+        "杀掉残留进程再启"
+      ],
+      "useless": [
+        "清缓存"
+      ]
+    },
+    {
+      "id": "sandboxDenied",
+      "title": "沙箱/ACL 拒绝写入",
+      "cause": "工作区或数据根 ACL 异常",
+      "evidence": "EPERM / EACCES 在 workspace 写入",
+      "actions": [
+        "修 ACL 或换工作区"
+      ],
+      "useless": [
+        "重装"
+      ]
+    },
+    {
+      "id": "hostCrash",
+      "title": "宿主主进程崩溃",
+      "cause": "未捕获异常（如 spawn ENOENT）",
+      "evidence": "crash-*-host.log",
+      "actions": [
+        "读栈定位模块",
+        "按类目对症"
+      ],
+      "useless": [
+        "盲禁插件"
+      ]
+    },
+    {
+      "id": "providerLoop",
+      "title": "模型列表反复拉取",
+      "cause": "provider 配置错误/网络",
+      "evidence": "model listing from 出现 ≥5 次",
+      "actions": [
+        "检查 provider baseURL 与 key"
+      ],
+      "useless": [
+        "清缓存"
+      ]
+    },
+    {
+      "id": "notActivate",
+      "title": "插件未激活",
+      "cause": "bundles 有但依赖缺失/版本不符",
+      "evidence": "startup 日志 inactive entries",
+      "actions": [
+        "预检 R3/R4",
+        "重装该插件"
+      ],
+      "useless": [
+        "重启"
+      ]
+    },
+    {
+      "id": "moduleMissing",
+      "title": "插件模块缺失",
+      "cause": "node_modules 不完整",
+      "evidence": "Cannot find module",
+      "actions": [
+        "pnpm 重装该包"
+      ],
+      "useless": [
+        "清缓存"
+      ]
+    },
+    {
+      "id": "portInUse",
+      "title": "端口被占",
+      "cause": "残留进程或其他程序",
+      "evidence": "EADDRINUSE",
+      "actions": [
+        "杀占用进程或换端口"
+      ],
+      "useless": [
+        "重装"
+      ]
+    },
+    {
+      "id": "stuckKill",
+      "title": "旧进程杀不掉",
+      "cause": "句柄占用/权限",
+      "evidence": "taskkill 后进程仍在",
+      "actions": [
+        "强杀整棵树",
+        "等 5 秒再启"
+      ],
+      "useless": [
+        "重复启动"
+      ]
+    },
+    {
+      "id": "slotConflict",
+      "title": "UI 插槽冲突",
+      "cause": "两个插件抢同一 slot",
+      "evidence": "slot already taken",
+      "actions": [
+        "禁用后者"
+      ],
+      "useless": [
+        "清缓存"
+      ]
+    },
+    {
+      "id": "peerIncompat",
+      "title": "peer 依赖版本不符",
+      "cause": "插件要求的宿主/依赖版本与本机不符",
+      "evidence": "peer dep mismatch",
+      "actions": [
+        "降级插件或换版本"
+      ],
+      "useless": [
+        "重启"
+      ]
+    },
+    {
+      "id": "whiteScreen",
+      "title": "白屏",
+      "cause": "客户端插件加载失败/渲染报错",
+      "evidence": "renderer 错误、界面空白但有进程",
+      "actions": [
+        "点名禁用可疑客户端插件",
+        "清渲染缓存"
+      ],
+      "useless": [
+        "重装 DSH"
+      ]
+    }
+  ]
+}
