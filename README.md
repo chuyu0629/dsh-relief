@@ -6,6 +6,23 @@
 > 现状：作者本机（Windows 11 / DSH 0.2.2-rc.1）验证通过；别人的机器上可能遇到没覆盖到的情况。
 > 遇到问题请开 issue，附上 `dsh-repair.log` 里出错那几行（不要贴 token、邮箱、路径里的用户名可以打码）。
 
+## 症状关键词速查
+
+按你**屏幕上真实的报错原文**找一行（搜索这些词就能搜到这个仓库）：
+
+| 报错 / 现象原文 | 多半是什么 | 工具怎么做 |
+| --- | --- | --- |
+| `Web authentication failed`、`desktop welcome`、401 / 403 | 登录缓存与引擎不匹配、Cookie 头超出 Node 的 16KB 上限导致 431 | 把 `%APPDATA%\@deepseek-ai\dsh-desktop` 改名备份，重置 cookie 库，重启 |
+| 白屏、一直转圈、窗口出来但界面空 | 渲染进程崩了／重复服务名／GPU 进程不可用 | 清渲染缓存；必要时带 `--disable-gpu` 启动 |
+| `port is already in use`、`EADDRINUSE`、界面连不上 | 端口被残留进程占着，或落在 Hyper-V 保留段 | 结束占用进程、换端口、报告保留段冲突 |
+| `Cannot find module`、`ERR_MODULE_NOT_FOUND` | 插件依赖没装全／装坏了 | 先做配置预检，按日志点名的插件精准摘除 |
+| 卡在「正在加载插件」、启动到一半就退 | 插件把宿主拖死 | 二轮阶梯：先禁可疑插件，再安全模式（只留官方插件） |
+| `GPU process isn't usable`、`cache_util_win.cc(20) Unable to move the cache: Access is denied` | GPU 进程或缓存目录权限坏了 | 带 `--disable-gpu` 启动／缓存目录改名后重建 |
+| 反复重启、起两个实例、`ERROR:gpu_process_host` | 单实例锁残留 | 加单实例互斥、清理残留进程 |
+| `STATUS_BREAKPOINT`、退出码 `-2147483645`、`v8Snapshot` | V8 快照或本体文件损坏 | 判为致命，停下来告诉你（这类改配置没用） |
+| 系统盘快满了、`ENOSPC` | 磁盘不足 | 判为致命并提示先清盘 |
+
+对不上号也没关系：直接跑，它自己会读最近 8 份日志分类。分不出来就只做无害的清理和重启。
 ## 它能干什么
 
 启动失败时，它不是"重启大法"，而是**先分类再对症**：
