@@ -8,7 +8,14 @@ if (-not $Root) { try { $Root = Split-Path -Parent $MyInvocation.MyCommand.Defin
 if (-not $Root) { $Root = (Get-Location).Path }
 
 function Find-DshHome {
-  foreach ($p in @($env:DSH_APP, (Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness'), 'C:\Program Files\DeepSeek Harness', 'C:\Program Files (x86)\DeepSeek Harness', 'D:\Program Files\DeepSeek Harness', 'C:\111111', 'D:\111111')) {
+  try {
+    $pr = Get-Process -Name 'DeepSeek Harness' -ErrorAction SilentlyContinue | Select-Object -First 1
+    if ($pr -and $pr.Path) {
+      $dir = Split-Path -Parent $pr.Path
+      if (Test-Path (Join-Path $dir 'DeepSeek Harness.exe')) { return $dir }
+    }
+  } catch { }
+  foreach ($p in @($env:DSH_APP, (Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness'), (Join-Path $env:ProgramFiles 'DeepSeek Harness'), (Join-Path ${env:ProgramFiles(x86)} 'DeepSeek Harness'), 'C:\Program Files\DeepSeek Harness', 'C:\Program Files (x86)\DeepSeek Harness')) {
     if (Test-Path (Join-Path $p 'DeepSeek Harness.exe')) { return $p }
   }
   try {
