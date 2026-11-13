@@ -10,3 +10,5 @@ dist/
 node_modules/
 *.bak
 *.bak-*
+dsh-rescue.log
+dsh-verify-*
