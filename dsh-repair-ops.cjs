@@ -204,17 +204,7 @@ function cmdPreflight(o) {
   for (const d of Object.keys(st.deps)) if (d.indexOf('@deepseek-ai/') !== 0 && !exists(path.join(st.paths.nm, d))) add('R4', 'info', 'dependencies 里的 ' + d + ' 缺 node_modules 目录', '重装该插件');
   const seen = new Set();
   for (const b of st.bundles) { if (seen.has(b)) add('R8', 'warn', 'bundles 重复项：' + b, '删掉重复行'); seen.add(b); }
-  for (const d of Object.keys(st.deps)) {
-    const pj = rdj(path.join(st.paths.nm, d, 'package.json'));
-    if (!pj) continue;
-    const host = rdj(path.join(o.home || 'C:/111111/resources/app', 'resources/app/package.json'));
-    const peers = pj.peerDependencies && typeof pj.peerDependencies === 'object' ? pj.peerDependencies : {};
-    for (const k of Object.keys(peers)) {
-      if (k !== 'cordis' && k !== '@cordisjs/core' && k !== 'dsh' && k !== '@deepseek-ai/dsh') continue;
-      if (host && host.version) { /* 只报告，不做 semver 判定 */ }
-    }
-  }
-  const free = (function () { try { const s = fs.statfsSync ? fs.statfsSync('C:\\') : null; return s ? Math.round((s.bavail * s.bsize) / 1073741824) : null; } catch (e) { return null; } })();
+  const free = (function () { try { const s = fs.statfsSync ? fs.statfsSync((process.env.SystemDrive || 'C:') + '\\') : null; return s ? Math.round((s.bavail * s.bsize) / 1073741824) : null; } catch (e) { return null; } })();
   if (free !== null && free < 2) add('R9', 'fatal', 'C 盘剩余 ' + free + 'GB，低于 2GB', '清理磁盘后再启动');
   return { ok: true, findings: f, counts: { fatal: f.filter((x) => x.level === 'fatal').length, warn: f.filter((x) => x.level === 'warn').length }, freeGB: free };
 }
@@ -243,7 +233,8 @@ function cmdVerify(o) {
     if (src.paths.pkg) fs.copyFileSync(src.paths.pkg, path.join(prof, 'package.json'));
     if (src.patchText !== null) fs.copyFileSync(src.paths.patch, path.join(prof, 'cordis.patch.yml'));
     if (exists(src.paths.nm)) { try { fs.symlinkSync(src.paths.nm, path.join(prof, 'node_modules'), 'junction'); linked = true; } catch (e) { } }
-    const dsh = o.dsh || 'C:/111111/resources/runtime/cli/bin/dsh.cmd';
+    const dsh = o.dsh || process.env.DSH_CMD;
+    if (!dsh) return { ok: false, reason: 'no_dsh', message: '需要 --dsh <dsh.cmd 路径> 或环境变量 DSH_CMD' };
     const r = spawnSync('cmd.exe', ['/c', dsh + ' --profile ' + (o.name || 'verify') + ' --dump-config'], {
       env: Object.assign({}, process.env, { DSH_HOME: tmp }),
       encoding: 'utf8', timeout: Number(o.timeout || 120000),
