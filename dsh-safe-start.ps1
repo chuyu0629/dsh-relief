@@ -3,17 +3,10 @@
 param([switch]$CheckOnly)
 $ErrorActionPreference = 'Continue'
 $Root   = $PSScriptRoot
-if (-not $Root) { $Root = (Get-Location).Path }
+if (-not $Root) { $Root = 'D:\111111' }
 
 function Find-DshHome {
-  try {
-    $pr = Get-Process -Name 'DeepSeek Harness' -ErrorAction SilentlyContinue | Select-Object -First 1
-    if ($pr -and $pr.Path) {
-      $dir = Split-Path -Parent $pr.Path
-      if (Test-Path (Join-Path $dir 'DeepSeek Harness.exe')) { return $dir }
-    }
-  } catch { }
-  foreach ($p in @($env:DSH_APP, (Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness'), (Join-Path $env:ProgramFiles 'DeepSeek Harness'), (Join-Path ${env:ProgramFiles(x86)} 'DeepSeek Harness'), 'C:\Program Files\DeepSeek Harness', 'C:\Program Files (x86)\DeepSeek Harness')) {
+  foreach ($p in @('C:\111111', 'D:\111111', 'C:\Program Files\DeepSeek Harness', 'D:\Program Files\DeepSeek Harness')) {
     if (Test-Path (Join-Path $p 'DeepSeek Harness.exe')) { return $p }
   }
   try {
@@ -25,21 +18,18 @@ function Find-DshHome {
       }
     }
   } catch { }
-  return $null
+  return 'C:\111111'
 }
 $DshHome = Find-DshHome
-$Node = Join-Path $Root 'node.exe'
-if (-not (Test-Path $Node)) { $cand = Get-ChildItem (Join-Path $DshHome 'resources') -Filter 'node.exe' -Recurse -Depth 6 -File -ErrorAction SilentlyContinue | Select-Object -First 1; if ($cand) { $Node = $cand.FullName } }
-if (-not (Test-Path $Node)) { $g = Get-Command node.exe -ErrorAction SilentlyContinue; if ($g) { $Node = $g.Source } }
+$Node   = Join-Path $Root 'node24\node-v24.22.1-win-x64\node.exe'
 $Check  = Join-Path $Root 'yaml-check.js'
 $PatchV = Join-Path $Root 'rea-validate.js'
 $Log    = Join-Path $Root 'dsh-safe-start.log'
 $Golden = Join-Path $Root 'dsh-golden'
 $Exe    = Join-Path $DshHome 'DeepSeek Harness.exe'
-$HomeDir = Join-Path $env:USERPROFILE '.dsh'
-$PatchRoot = Join-Path $HomeDir 'cordis.patch.yml'
-$PatchProf = Join-Path $HomeDir 'profiles\desktop\cordis.patch.yml'
-$Cred      = Join-Path $HomeDir '.credentials.yaml'
+$PatchRoot = 'C:\Users\Administrator\.dsh\cordis.patch.yml'
+$PatchProf = 'C:\Users\Administrator\.dsh\profiles\desktop\cordis.patch.yml'
+$Cred      = 'C:\Users\Administrator\.dsh\.credentials.yaml'
 if (-not (Test-Path $Golden)) { New-Item -ItemType Directory -Path $Golden -Force | Out-Null }
 
 function Note($m) { try { "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss')  $m" | Out-File -FilePath $Log -Append -Encoding utf8 } catch { } }
@@ -95,7 +85,7 @@ $dead     = @()
 $warn     = @()
 
 # --- profile package.json 校验与回滚 ---
-$Pkg = Join-Path $HomeDir 'profiles\desktop\package.json'
+$Pkg = 'C:\Users\Administrator\.dsh\profiles\desktop\package.json'
 if (Test-Path $Pkg) {
   $pkgOk = $false
   if (Test-Path $Node) {

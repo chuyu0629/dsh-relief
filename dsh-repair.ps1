@@ -1,21 +1,12 @@
 ﻿# DSH 一键修复：停进程 -> 查数据 -> 补齐 -> 快照 -> 校验启动 -> 启动失败则逐级禁用插件急救
 param([switch]$SelfTest, [switch]$DryRun, [switch]$Preflight, [switch]$SafeMode, [switch]$Undo, [switch]$Verify)
 $ErrorActionPreference = 'Continue'
-try { [Console]::OutputEncoding = New-Object System.Text.UTF8Encoding $false } catch { }
-try { $OutputEncoding = New-Object System.Text.UTF8Encoding $false } catch { }
 $Root = $PSScriptRoot
 if (-not $Root) { try { $Root = Split-Path -Parent $MyInvocation.MyCommand.Definition } catch { } }
-if (-not $Root) { $Root = (Get-Location).Path }
+if (-not $Root) { $Root = 'D:\111111' }
 
 function Find-DshHome {
-  try {
-    $pr = Get-Process -Name 'DeepSeek Harness' -ErrorAction SilentlyContinue | Select-Object -First 1
-    if ($pr -and $pr.Path) {
-      $dir = Split-Path -Parent $pr.Path
-      if (Test-Path (Join-Path $dir 'DeepSeek Harness.exe')) { return $dir }
-    }
-  } catch { }
-  foreach ($p in @($env:DSH_APP, (Join-Path $env:LOCALAPPDATA 'Programs\DeepSeek Harness'), (Join-Path $env:ProgramFiles 'DeepSeek Harness'), (Join-Path ${env:ProgramFiles(x86)} 'DeepSeek Harness'), 'C:\Program Files\DeepSeek Harness', 'C:\Program Files (x86)\DeepSeek Harness')) {
+  foreach ($p in @('C:\111111', 'D:\111111', 'C:\Program Files\DeepSeek Harness', 'D:\Program Files\DeepSeek Harness')) {
     if (Test-Path (Join-Path $p 'DeepSeek Harness.exe')) { return $p }
   }
   try {
@@ -27,12 +18,11 @@ function Find-DshHome {
       }
     }
   } catch { }
-  return $null
+  return 'C:\111111'
 }
 $DshHome = Find-DshHome
 $Node = $null
-if (-not $DshHome) { Write-Host '找不到 DeepSeek Harness 安装目录。请用环境变量 DSH_APP 指定安装路径（含 DeepSeek Harness.exe 的目录）。'; exit 2 }
-foreach ($nc in @((Join-Path $Root 'node.exe'), (Join-Path $DshHome 'resources\resources\runtime\primary-runtime\dependencies\node\bin\node.exe'), (Join-Path $DshHome 'resources\runtime\primary-runtime\dependencies\node\bin\node.exe'), (Join-Path $env:ProgramFiles 'nodejs\node.exe'))) {
+foreach ($nc in @((Join-Path $Root 'node24\node-v24.22.1-win-x64\node.exe'), (Join-Path $DshHome 'resources\runtime\primary-runtime\dependencies\node\bin\node.exe'), (Join-Path $Root 'node.exe'))) {
   if ((-not $Node) -and $nc -and (Test-Path $nc)) { $Node = $nc }
 }
 if (-not $Node) {
@@ -41,11 +31,10 @@ if (-not $Node) {
     if ($cand) { $Node = $cand.FullName }
   } catch { }
 }
-if (-not $Node) { try { $g = Get-Command node.exe -ErrorAction SilentlyContinue; if ($g) { $Node = $g.Source } } catch { } }
 if (-not $Node) { $Node = 'node' }
 $UserHome = $env:USERPROFILE
 if (-not $UserHome) { $UserHome = $env:HOMEDRIVE + $env:HOMEPATH }
-if (-not $UserHome) { $UserHome = [Environment]::GetFolderPath('UserProfile') }
+if (-not $UserHome) { $UserHome = 'C:\Users\Administrator' }
 $HomeDir = Join-Path $UserHome '.dsh'
 $ProfileDir = Join-Path $HomeDir 'profiles\desktop'
 $log = Join-Path $Root 'dsh-repair.log'
@@ -518,11 +507,7 @@ function Show-Preflight {
   Note ('preflight fatal=' + $r.counts.fatal + ' warn=' + $r.counts.warn)
   $f = @($r.findings)
   if ($f.Count -eq 0) { Say '   预检：没发现问题'; return }
-  $show = @($f | Where-Object { $_.level -ne 'info' })
-  if ($show.Count -eq 0) { Say ('   预检：' + $f.Count + ' 条提示，无 fatal/warn'); return }
-  $i = 0
-  foreach ($x in $show) { if ($i -ge 6) { break }; Say ('   [' + $x.level + '] ' + $x.id + ' ' + $x.message); $i++ }
-  if ($show.Count -gt 6) { Say ('   ...另有 ' + ($show.Count - 6) + ' 条，详见日志') }
+  foreach ($x in $f) { Say ('   [' + $x.level + '] ' + $x.id + ' ' + $x.message) }
 }
 
 function Get-DiffSuspects {
