@@ -31,6 +31,11 @@
 
 遇到这些它会明说，不会假装修好了。
 
+## 下载
+
+- 直接下 exe：[Releases](https://github.com/chuyu0629/dsh-relief/releases/latest)
+- 或者克隆仓库跑脚本：`git clone https://github.com/chuyu0629/dsh-relief.git`
+
 ## 怎么用
 
 ### 方式一：一键 exe（推荐给不熟命令行的朋友）
