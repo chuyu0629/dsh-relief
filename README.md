@@ -128,3 +128,12 @@ exe 是 `csc` 编译的启动器，没有签名，可能被误报。介意的话
 ## 许可
 
 MIT，见 [LICENSE](LICENSE)。自用、改造、二次分发都行，风险自担。
+
+## English (short)
+
+One-click repair tool for **DeepSeek Harness desktop on Windows**. It reads the newest crash logs, classifies the failure into 26 buckets, and fixes the common ones: HTTP 431 / Web authentication failed (stale dsh-auth-* cookies), blank window, GPU/cache errors, stuck plugin loading, occupied port. Nothing is touched before a backup is written, and -Undo rolls back.
+
+``nDshRelief.exe     -> double-click, click the start button
+dsh-repair.ps1   -> powershell -NoProfile -ExecutionPolicy Bypass -File .\dsh-repair.ps1 -DryRun
+``n
+MIT, no network calls, not affiliated with DeepSeek.

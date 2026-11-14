@@ -1,4 +1,4 @@
-﻿Add-Type -AssemblyName PresentationFramework
+Add-Type -AssemblyName PresentationFramework
 Add-Type -AssemblyName PresentationCore
 Add-Type -AssemblyName WindowsBase
 
@@ -363,11 +363,11 @@ function Start-Repair {
         Set-Status "完成" "#30D158"
         try { $ringFg.Stroke = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#47D07F") } catch { }
         $lblStep.Text = "已修复"
-        $lblMeta.Text = "DSH 已启动"
+        $lblMeta.Text = "DSH 已启动 · star 一下：dsh-relief"
         $btnStart.Content = "已修复"
         $btnStart.Opacity = 0.6
-        Set-Detail "窗口 4 秒后自动关闭"
-        $script:until = (Get-Date).AddSeconds(4)
+        Set-Detail "修好了就给个 star：https://github.com/chuyu0629/dsh-relief"
+        $script:until = (Get-Date).AddSeconds(7)
       }
       if ($script:done -and $script:until -and (Get-Date) -gt $script:until) {
         $script:until = $null
