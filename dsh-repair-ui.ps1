@@ -16,145 +16,76 @@ if ($Test) {
 }
 
 $xaml = @"
-<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="DSH 修复" Width="470" Height="356" WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen" Topmost="True" FontFamily="Segoe UI" UseLayoutRounding="True" SnapsToDevicePixels="True" Opacity="0">
-  <Border x:Name="Card" CornerRadius="18" BorderThickness="1" RenderTransformOrigin="0.5,0.5">
-    <Border.RenderTransform><ScaleTransform x:Name="WinScale" ScaleX="0.97" ScaleY="0.97"/></Border.RenderTransform>
-    <Border.BorderBrush>
-      <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#2AFFFFFF" Offset="0"/>
-        <GradientStop Color="#0AFFFFFF" Offset="0.3"/>
-        <GradientStop Color="#05FFFFFF" Offset="1"/>
-      </LinearGradientBrush>
-    </Border.BorderBrush>
-    <Border.Background>
-      <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-        <GradientStop Color="#111318" Offset="0"/>
-        <GradientStop Color="#0A0B0E" Offset="0.55"/>
-        <GradientStop Color="#07080A" Offset="1"/>
-      </LinearGradientBrush>
-    </Border.Background>
-    <Border.Effect><DropShadowEffect BlurRadius="60" ShadowDepth="0" Opacity="0.72" Color="#000000"/></Border.Effect>
-    <Grid>
-      <Ellipse Width="300" Height="300" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="-160,0,0,-180" IsHitTestVisible="False" Opacity="0.7">
-        <Ellipse.Fill><RadialGradientBrush><GradientStop Color="#3A5E6AD2" Offset="0"/><GradientStop Color="#005E6AD2" Offset="1"/></RadialGradientBrush></Ellipse.Fill>
-      </Ellipse>
-      <Ellipse Width="260" Height="260" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,-140,-110,0" IsHitTestVisible="False">
-        <Ellipse.Fill><RadialGradientBrush><GradientStop Color="#14FFFFFF" Offset="0"/><GradientStop Color="#00FFFFFF" Offset="1"/></RadialGradientBrush></Ellipse.Fill>
-      </Ellipse>
-      <Grid Margin="26,18,26,20">
-        <Grid.RowDefinitions>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="*"/>
-          <RowDefinition Height="Auto"/>
-          <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="DSH 修复" Width="560" Height="300" WindowStyle="None" AllowsTransparency="True" Background="Transparent" WindowStartupLocation="CenterScreen" Topmost="True" FontFamily="Segoe UI" UseLayoutRounding="True" SnapsToDevicePixels="True" Opacity="0">
+  <Border x:Name="Card" CornerRadius="16" BorderThickness="1" Background="#0C0D10" BorderBrush="#1A1D23" RenderTransformOrigin="0.5,0.5">
+    <Border.RenderTransform><ScaleTransform x:Name="WinScale" ScaleX="0.985" ScaleY="0.985"/></Border.RenderTransform>
+    <Border.Effect><DropShadowEffect BlurRadius="48" ShadowDepth="0" Opacity="0.6" Color="#000000"/></Border.Effect>
+    <Grid Margin="30,24,30,24">
+      <Grid.RowDefinitions>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+        <RowDefinition Height="Auto"/>
+      </Grid.RowDefinitions>
 
-        <Grid x:Name="Bar" Height="18" Background="Transparent">
-          <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-            <TextBlock Text="DEEPSEEK HARNESS" Foreground="#454A53" FontSize="9.5" VerticalAlignment="Center"/>
-            <Border CornerRadius="4" Background="#1AFFFFFF" Padding="5,1,5,2" Margin="8,0,0,0" VerticalAlignment="Center">
-              <TextBlock x:Name="VerChip" Text="RELIEF v3" Foreground="#7A808A" FontSize="8.5"/>
-            </Border>
-          </StackPanel>
-          <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-            <Border CornerRadius="9" Background="#08FFFFFF" Padding="8,2,8,3" BorderThickness="1" BorderBrush="#14FFFFFF">
-              <StackPanel Orientation="Horizontal">
-                <Ellipse x:Name="Dot" Width="5" Height="5" Fill="#5E6AD2" VerticalAlignment="Center" Margin="0,0,6,0"/>
-                <TextBlock x:Name="Status" Text="待命" Foreground="#8A9099" FontSize="9.5"/>
-              </StackPanel>
-            </Border>
-            <Button x:Name="CloseBtn" Content="&#x2715;" Width="20" Height="20" Padding="0" Margin="8,0,0,0" Background="Transparent" BorderThickness="0" Foreground="#6E737C" FontSize="10" Cursor="Hand" Focusable="False" VerticalAlignment="Center">
-              <Button.Template>
-                <ControlTemplate TargetType="Button">
-                  <Border x:Name="cb" CornerRadius="5" Background="Transparent">
-                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                  </Border>
-                  <ControlTemplate.Triggers>
-                    <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="cb" Property="Background" Value="#0FFFFFFF"/></Trigger>
-                  </ControlTemplate.Triggers>
-                </ControlTemplate>
-              </Button.Template>
-            </Button>
-          </StackPanel>
-        </Grid>
-
-        <Grid Grid.Row="1" Margin="0,20,0,0">
-          <Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
-          <StackPanel Grid.Column="0" VerticalAlignment="Center" Margin="0,0,16,0">
-            <TextBlock Text="CURRENT STEP" Foreground="#454B55" FontSize="9" Margin="0,0,0,8"/>
-            <TextBlock x:Name="Step" Text="准备就绪" Foreground="#F1F2F4" FontSize="21.5" FontWeight="SemiBold" TextWrapping="Wrap" LineHeight="28"/>
-            <TextBlock x:Name="Meta" Text="尚未开始" Foreground="#5C626B" FontSize="10" Margin="0,9,0,0"/>
-          </StackPanel>
-          <Grid Grid.Column="1" Width="78" Height="78" VerticalAlignment="Center">
-            <Ellipse Width="78" Height="78" Stroke="#12FFFFFF" StrokeThickness="1.6"/>
-            <Ellipse x:Name="RingFg" Width="78" Height="78" StrokeThickness="1.8" StrokeStartLineCap="Round" StrokeEndLineCap="Round">
-              <Ellipse.Stroke><LinearGradientBrush StartPoint="0,0" EndPoint="1,1"><GradientStop Color="#8F97F2" Offset="0"/><GradientStop Color="#DFE2FF" Offset="1"/></LinearGradientBrush></Ellipse.Stroke>
-              <Ellipse.RenderTransform><RotateTransform Angle="-90" CenterX="39" CenterY="39"/></Ellipse.RenderTransform>
-            </Ellipse>
-            <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
-              <TextBlock x:Name="PctBig" Text="0" FontSize="21" FontWeight="SemiBold" Foreground="#F1F2F4" HorizontalAlignment="Center"/>
-              <TextBlock Text="%" FontSize="8.5" Foreground="#5A6068" HorizontalAlignment="Center" Margin="0,-2,0,0"/>
-            </StackPanel>
-          </Grid>
-        </Grid>
-
-        <Grid Grid.Row="2" Margin="0,18,0,0">
-          <Grid.ColumnDefinitions><ColumnDefinition/></Grid.ColumnDefinitions>
-          <Grid Grid.Column="0" Height="2" VerticalAlignment="Center">
-            <Border CornerRadius="1" Background="#0FFFFFFF"/>
-            <Border x:Name="Track" CornerRadius="1" ClipToBounds="True">
-              <Border x:Name="Fill" HorizontalAlignment="Left" Width="0" CornerRadius="1">
-                <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="#5E6AD2" Offset="0"/><GradientStop Color="#B6BCFF" Offset="1"/></LinearGradientBrush></Border.Background>
-              </Border>
-            </Border>
-            <Border x:Name="ShimHold" CornerRadius="1" ClipToBounds="True">
-              <Border x:Name="Shim" Width="90" Height="2" HorizontalAlignment="Left" Opacity="0.2" IsHitTestVisible="False">
-                <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="1,0"><GradientStop Color="#00FFFFFF" Offset="0"/><GradientStop Color="#99FFFFFF" Offset="0.5"/><GradientStop Color="#00FFFFFF" Offset="1"/></LinearGradientBrush></Border.Background>
-                <Border.RenderTransform><TranslateTransform x:Name="ShimT" X="-100"/></Border.RenderTransform>
-              </Border>
-            </Border>
-          </Grid>
-        </Grid>
-
-        <Border Grid.Row="3" Height="1" Background="#0DFFFFFF" Margin="0,16,0,0"/>
-
-        <Border Grid.Row="4" Margin="0,14,0,0" CornerRadius="8" Background="#06FFFFFF" BorderThickness="1" BorderBrush="#0BFFFFFF" Padding="11,9,11,9" VerticalAlignment="Top" MinHeight="42"><Grid VerticalAlignment="Top">
-          <Grid.ColumnDefinitions><ColumnDefinition Width="2"/><ColumnDefinition/></Grid.ColumnDefinitions>
-          <Border Grid.Column="0" Width="2" CornerRadius="1" Background="#5E6AD2" Opacity="0.7" VerticalAlignment="Stretch" Margin="0,1,0,1"/>
-          <StackPanel Grid.Column="1" Margin="12,0,0,0">
-            <TextBlock Text="LIVE LOG" Foreground="#3F444D" FontSize="8.5" Margin="0,0,0,6"/>
-            <TextBlock x:Name="Detail" Text="点「开始修复」后 DSH 会重启一次，此处对话会中断" Foreground="#78808C" FontFamily="Cascadia Mono, Consolas" FontSize="10.5" TextWrapping="Wrap" LineHeight="16"/>
-          </StackPanel>
-        </Grid></Border>
-
-        <StackPanel Grid.Row="5" Orientation="Horizontal" Margin="0,14,0,0">
-          <Border CornerRadius="6" Background="#0DFFFFFF" BorderThickness="1" BorderBrush="#12FFFFFF" Padding="7,2,7,3" Margin="0,0,6,0">
-            <TextBlock x:Name="ChipA" Text="备份 —" Foreground="#6B7280" FontSize="9"/>
-          </Border>
-          <Border CornerRadius="6" Background="#0DFFFFFF" BorderThickness="1" BorderBrush="#12FFFFFF" Padding="7,2,7,3" Margin="0,0,6,0">
-            <TextBlock x:Name="ChipB" Text="缓存 —" Foreground="#6B7280" FontSize="9"/>
-          </Border>
-          <Border CornerRadius="6" Background="#0DFFFFFF" BorderThickness="1" BorderBrush="#12FFFFFF" Padding="7,2,7,3">
-            <TextBlock x:Name="ChipC" Text="插件 —" Foreground="#6B7280" FontSize="9"/>
-          </Border>
+      <Grid x:Name="Bar" Height="18" Background="Transparent">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <TextBlock Text="DSH RELIEF" Foreground="#5C626B" FontSize="9.5" FontWeight="SemiBold" VerticalAlignment="Center"/>
+          <TextBlock x:Name="VerChip" Text="v3.0.1" Foreground="#3B4047" FontSize="9.5" Margin="10,1,0,0" VerticalAlignment="Center"/>
         </StackPanel>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
+          <Ellipse x:Name="Dot" Width="5" Height="5" Fill="#5C626B" Margin="0,0,7,0" VerticalAlignment="Center"/>
+          <TextBlock x:Name="Status" Text="待命" Foreground="#7C828B" FontSize="10" VerticalAlignment="Center"/>
+          <Button x:Name="CloseBtn" Content="&#x2715;" Width="18" Height="18" Padding="0" Margin="10,0,0,0" Background="Transparent" BorderThickness="0" Foreground="#4A4F57" FontSize="9" Cursor="Hand" Focusable="False" VerticalAlignment="Center">
+            <Button.Template>
+              <ControlTemplate TargetType="Button">
+                <Border CornerRadius="5" Background="Transparent">
+                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                </Border>
+              </ControlTemplate>
+            </Button.Template>
+          </Button>
+        </StackPanel>
+      </Grid>
 
-        <Button x:Name="StartBtn" Grid.Row="6" Content="开始修复" Height="42" Margin="0,14,0,0" Foreground="#EBECF2" FontSize="12.5" FontWeight="SemiBold" Cursor="Hand" Focusable="False">
+      <StackPanel Grid.Row="1" Margin="0,28,0,0">
+        <TextBlock x:Name="PctBig" Text="0" Foreground="#F3F4F6" FontSize="40" FontFamily="Segoe UI Light" FontWeight="Light"/>
+        <TextBlock x:Name="Step" Text="准备就绪" Foreground="#A6ACB5" FontSize="13.5" Margin="0,12,0,0" TextWrapping="Wrap" LineHeight="19"/>
+        <TextBlock x:Name="Meta" Text="尚未开始" Foreground="#4A4F57" FontSize="10" Margin="0,6,0,0"/>
+      </StackPanel>
+
+      <Grid Grid.Row="2" Height="1.5" Margin="0,22,0,0">
+        <Border CornerRadius="1" Background="#16181D"/>
+        <Border x:Name="Track" CornerRadius="1" ClipToBounds="True" Background="Transparent">
+          <Border x:Name="Fill" HorizontalAlignment="Left" Width="0" CornerRadius="1" Background="#DCDFE4"/>
+        </Border>
+        <Border x:Name="ShimHold" CornerRadius="1" ClipToBounds="True" Background="Transparent">
+          <Border x:Name="Shim" Width="120" Height="1.5" HorizontalAlignment="Left" Opacity="0.10" IsHitTestVisible="False" Background="#FFFFFF">
+            <Border.RenderTransform><TranslateTransform x:Name="ShimT" X="-140"/></Border.RenderTransform>
+          </Border>
+        </Border>
+      </Grid>
+
+      <TextBlock x:Name="Detail" Grid.Row="3" Text="点「开始修复」后 DSH 会重启一次，此处对话会中断" Foreground="#565C66" FontFamily="Cascadia Mono, Consolas" FontSize="10.5" Margin="0,18,0,0" TextTrimming="CharacterEllipsis" TextWrapping="NoWrap"/>
+
+      <Grid Grid.Row="4" Margin="0,20,0,0">
+        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+          <TextBlock x:Name="ChipA" Text="备份 —" Foreground="#4A4F57" FontSize="9.5"/>
+          <TextBlock Text="·" Foreground="#2E3238" FontSize="9.5" Margin="7,0,7,0"/>
+          <TextBlock x:Name="ChipB" Text="缓存 —" Foreground="#4A4F57" FontSize="9.5"/>
+          <TextBlock Text="·" Foreground="#2E3238" FontSize="9.5" Margin="7,0,7,0"/>
+          <TextBlock x:Name="ChipC" Text="插件 —" Foreground="#4A4F57" FontSize="9.5"/>
+        </StackPanel>
+        <Button x:Name="StartBtn" Content="开始修复" HorizontalAlignment="Right" Padding="18,7,18,8" Background="#0A0B0D" Foreground="#C3C8CF" FontSize="11.5" Cursor="Hand" Focusable="False">
           <Button.Template>
             <ControlTemplate TargetType="Button">
-              <Border x:Name="bd" CornerRadius="10" BorderThickness="1" BorderBrush="#8E96FF">
-                <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#7A85F0" Offset="0"/><GradientStop Color="#5A66D6" Offset="1"/></LinearGradientBrush></Border.Background>
-                <Grid>
-                  <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                  <Border CornerRadius="10" BorderThickness="1,1,1,0" BorderBrush="#33FFFFFF" IsHitTestVisible="False"/>
-                </Grid>
+              <Border x:Name="bd" CornerRadius="8" BorderThickness="1" BorderBrush="#262A31" Background="#0A0B0D">
+                <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
               </Border>
               <ControlTemplate.Triggers>
-                <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="bd" Property="BorderBrush" Value="#6A8F97F2"/></Trigger>
-                <Trigger Property="IsPressed" Value="True"><Setter TargetName="bd" Property="Background" Value="#0DFFFFFF"/></Trigger>
+                <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="bd" Property="BorderBrush" Value="#3D434C"/><Setter Property="Foreground" Value="#EDEFF2"/></Trigger>
+                <Trigger Property="IsPressed" Value="True"><Setter TargetName="bd" Property="Background" Value="#14161A"/></Trigger>
               </ControlTemplate.Triggers>
             </ControlTemplate>
           </Button.Template>
@@ -208,18 +139,7 @@ function Set-Chip($el, [string]$text) {
   try { if ($text -and $text -ne $el.Text) { $el.Text = $text } } catch { }
 }
 
-function Set-Arc([double]$pct) {
-  try {
-    $c = 239.4
-    $th = 1.8
-    $v = [Math]::Max(0.0, [Math]::Min(100.0, $pct))
-    $arcLen = $c * ($v / 100.0)
-    $d = New-Object System.Windows.Media.DoubleCollection
-    if ($arcLen -le 0.01) { $null = $d.Add([double]0.0001); $null = $d.Add([double]($c / $th)) }
-    else { $null = $d.Add([double]($arcLen / $th)); $null = $d.Add([double](($c - $arcLen) / $th)) }
-    $ringFg.StrokeDashArray = $d
-  } catch { }
-}
+function Set-Arc([double]$pct) { }
 
 function Set-Big([int]$pct) {
   if ([string]$pct -eq $script:cntNow) { return }
