@@ -1,5 +1,12 @@
 # 更新记录
 
+## v3.0.1 (2026-11-15)
+
+- After a successful repair the window now points users to the repo (star), and stays 7s instead of 4s
+- First line of dsh-repair.log carries the project URL
+- README: added a short English section
+- Fixed: scripts must be saved as UTF-8 with BOM (PowerShell 5.1 mis-parses the WPF UI otherwise)
+
 ## v3 (2026-11-14)
 
 - 诊断分类从 8 类扩到 26 类，按类对症处理，不再一律重启
